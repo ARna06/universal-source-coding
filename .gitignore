@@ -2,3 +2,5 @@
 \results
 \env
 .DS store
+debug*
+\no_rel

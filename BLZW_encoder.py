@@ -38,6 +38,7 @@ class Encoding:
         accumulator = code_with_space.split()
         running_dictionary = {}
         unambiguous = ''
+        #print(accumulator)
 
         def return_key(dictionary, idx):
             return list(dictionary.keys())[list(dictionary.values()).index(idx)]
@@ -46,33 +47,32 @@ class Encoding:
             s = accumulator[2*i], accumulator[2*i+1] 
             if s[0] != '#' :
                 if (accumulator[2*i+2] != '#') and (int(accumulator[2*i+2]) not in list(running_dictionary.values())):
-                    unambiguous += s.join('')
+                    unambiguous += ''.join(s)
                     prev = return_key(running_dictionary, int(s[0]))
                     running_dictionary[prev + s[1]] = int(accumulator[2*i+2])
-                elif (accumulator[2*i+2] != '#') and int(accumulator[2*i+2]) in list(running_dictionary.values()):
-                    if return_key(running_dictionary,int(accumulator[2*i+2]))+s[1] != return_key(running_dictionary, int(s[0]))+s[1]:
-                        actual_rank = self.encode_order[return_key(running_dictionary, int(s[0])) + s[1]]
-                        running_dictionary[return_key(running_dictionary, int(s[0])) + s[1]] = actual_rank
-                        unambiguous = unambiguous + s.join('') + '(' + actual_rank + ')'
-                    else:
-                        unambiguous += s.join('')
+                elif (accumulator[2*i+2] != '#') and (int(accumulator[2*i+2]) in list(running_dictionary.values())):
+                    prev = return_key(running_dictionary, int(s[0]))
+                    actual_rank = self.encode_order[prev+s[1]]
+                    running_dictionary[prev + s[1]] = actual_rank
+                    unambiguous = unambiguous+''.join(s)+'('+str(actual_rank)+')'      
                 else:
                     prev = return_key(running_dictionary, int(s[0]))
                     actual_rank = self.encode_order[prev + s[1]]
                     running_dictionary[prev + s[1]] = actual_rank
-                    unambiguous = unambiguous + s.join('') + '(' + actual_rank + ')'
+                    unambiguous = unambiguous + ''.join(s) + '(' + str(actual_rank) + ')'
             if s[0] == '#':
                 if accumulator[2*i+2] == '#':
                     actual_rank = self.encode_order[s[1]]
                     running_dictionary[s[1]] = actual_rank
-                    unambiguous = unambiguous + s.join('') + '(' + actual_rank + ')'
-                elif accumulator[2*i+2] != '#' and return_key(running_dictionary, int(accumulator[2*i+2])) != s[1]:
+                    unambiguous = unambiguous + ''.join(s) + '(' + str(actual_rank) + ')'
+                elif accumulator[2*i+2] != '#' and (int(accumulator[2*i+2]) in list(running_dictionary.values())) :
                     actual_rank = self.encode_order[s[1]]
                     running_dictionary[s[1]] = actual_rank
-                    unambiguous = unambiguous + s.join('') + '(' + actual_rank + ')'
+                    unambiguous = unambiguous+''.join(s)+'('+str(actual_rank)+')'
                 else:
                     actual_rank = int(accumulator[2*i+2])
                     running_dictionary[s[1]] = actual_rank 
-                    unambiguous = unambiguous + s.join('')
-
+                    unambiguous = unambiguous + ''.join(s)
+        unambiguous += accumulator[-2]+accumulator[-1]
+        #print(running_dictionary)
         return unambiguous

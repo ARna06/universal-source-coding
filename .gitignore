@@ -1,5 +1,5 @@
-*.pdf
-\results
+*.pdf 
+*.Rmd
 \env
 .DS store
 \no_rel
